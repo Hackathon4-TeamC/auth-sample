@@ -10,7 +10,7 @@ from tortoise.contrib.pydantic import pydantic_model_creator
 from tortoise.models import Model
 
 
-JWT_SEACRET = "myjwtseacret"
+JWT_SECRET = "myjwtsecret"
 
 app = FastAPI()
 
