@@ -11,7 +11,6 @@ from tortoise.models import Model
 
 
 JWT_SECRET = "myjwtsecret"
-
 app = FastAPI()
 
 # corsの設定
@@ -55,7 +54,7 @@ async def authenticate_user(username:str,password:str):
 
 async def get_current_user(token:str = Depends(oauth2_scheme)):
         try:
-            payload = jwt.decode(token,JWT_SEACRET,algorithms=["HS256"])
+            payload = jwt.decode(token,JWT_SECRET,algorithms=["HS256"])
             user = await User.get(id=payload.get("id"))
         except:
             raise HTTPException(
@@ -76,7 +75,7 @@ async def genrate_token(form_data:OAuth2PasswordRequestForm = Depends()):
         return { "error":"invalid credentials"}
 
     user_obj = await User_Pydantic.from_tortoise_orm(user)
-    token =  jwt.encode(user_obj.dict(),JWT_SEACRET)
+    token =  jwt.encode(user_obj.dict(),JWT_SECRET)
     return {"access_token":token,"token_type":"bearer"}
 
 
@@ -99,7 +98,7 @@ async def create_user(user:UserIn_Pydantic):
 
 register_tortoise(
     app,
-    db_url="postgres://nishiura:nishiura@localhost:5432",
+    db_url="sqlite://db.sqlite3",
     modules={"models":["main"]},
     generate_schemas=True,
     add_exception_handlers=True
